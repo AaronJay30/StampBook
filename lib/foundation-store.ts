@@ -98,11 +98,18 @@ function createDefaultBook(userId: string): Book {
 }
 
 function createDefaultPage(bookId: string): Page {
+  const d = new Date();
   return {
     id: randomUUID(),
     bookId,
     pageNumber: 1,
+    year: d.getFullYear(),
+    month: d.getMonth(),
   };
+}
+
+function hasEmptySlotForPage(pageId: string, gridSlots: GridSlot[]) {
+  return gridSlots.filter((slot) => slot.pageId === pageId).length < GRID_CAPACITY;
 }
 
 export function createEmptyFoundationState(): FoundationState {
@@ -243,9 +250,12 @@ export function createFoundationStore(initialState: FoundationState = createEmpt
       return null;
     }
 
-    const pages = getPagesForBook(book.id).map<BookPageView>((page) => ({
+    const rawPages = getPagesForBook(book.id);
+    const pages = rawPages.map<BookPageView>((page) => ({
       id: page.id,
       pageNumber: page.pageNumber,
+      year: page.year,
+      month: page.month,
       slots: buildSlotsForPage(page, state.stamps, state.gridSlots),
     }));
 
@@ -281,6 +291,47 @@ export function createFoundationStore(initialState: FoundationState = createEmpt
     return page;
   }
 
+  function getOrCreateMonthPage(userId: string, year: number, month: number) {
+    const book = getBookByUserId(userId);
+    if (!book) throw new Error("Book not found.");
+
+    const existing = state.pages.find(
+      (p) => p.bookId === book.id && p.year === year && p.month === month,
+    );
+    if (existing) return existing;
+
+    const pages = getPagesForBook(book.id);
+    const page: Page = {
+      id: randomUUID(),
+      bookId: book.id,
+      pageNumber: pages.length + 1,
+      year,
+      month,
+    };
+    state.pages.push(page);
+    return page;
+  }
+
+  function createPageForUser(userId: string) {
+    const book = getBookByUserId(userId);
+    if (!book) {
+      throw new Error("Book not found.");
+    }
+
+    const pages = getPagesForBook(book.id);
+    const lastPage = pages.at(-1);
+
+    if (lastPage && hasEmptySlotForPage(lastPage.id, state.gridSlots)) {
+      // Last page still has room — add a pair anyway so the spread stays full
+    }
+
+    // Always add two pages at once so the spread has a left and right page
+    const nextNumber = pages.length + 1;
+    const p1 = createPage(book.id, nextNumber);
+    const p2 = createPage(book.id, nextNumber + 1);
+    return { p1, p2 };
+  }
+
   function createStamp(input: CreateStampInput) {
     const owner = getUserById(input.userId);
     const book = getBookByUserId(input.userId);
@@ -294,34 +345,60 @@ export function createFoundationStore(initialState: FoundationState = createEmpt
     }
 
     const pages = getPagesForBook(book.id);
-    let targetPage = pages.find((page) => {
-      const usedSlots = state.gridSlots.filter((slot) => slot.pageId === page.id);
-      return usedSlots.length < GRID_CAPACITY;
-    });
-
-    if (!targetPage) {
-      targetPage = createPage(book.id, pages.length + 1);
-    }
-
-    const usedCoordinates = new Set(
-      state.gridSlots
-        .filter((slot) => slot.pageId === targetPage.id)
-        .map((slot) => `${slot.row}-${slot.column}`),
-    );
-
+    let targetPage: Page | undefined;
     let row = 0;
     let column = 0;
-    let placed = false;
 
-    for (let rowIndex = 0; rowIndex < GRID_ROWS && !placed; rowIndex += 1) {
-      for (let columnIndex = 0; columnIndex < GRID_COLUMNS; columnIndex += 1) {
-        if (!usedCoordinates.has(`${rowIndex}-${columnIndex}`)) {
-          row = rowIndex;
-          column = columnIndex;
-          placed = true;
-          break;
+    if (input.target) {
+      targetPage = pages.find((page) => page.id === input.target?.pageId);
+
+      if (!targetPage) {
+        throw new Error("Selected page was not found.");
+      }
+
+      const selectedPage = targetPage;
+
+      row = input.target.row;
+      column = input.target.column;
+
+      const targetSlot = state.gridSlots.find(
+        (slot) => slot.pageId === selectedPage.id && slot.row === row && slot.column === column,
+      );
+
+      if (targetSlot) {
+        throw new Error("That paper square already has a stamp.");
+      }
+    } else {
+      targetPage = pages.find((page) => hasEmptySlotForPage(page.id, state.gridSlots));
+
+      if (!targetPage) {
+        targetPage = createPage(book.id, pages.length + 1);
+      }
+
+      const autoPlacementPage = targetPage;
+
+      const usedCoordinates = new Set(
+        state.gridSlots
+          .filter((slot) => slot.pageId === autoPlacementPage.id)
+          .map((slot) => `${slot.row}-${slot.column}`),
+      );
+
+      let placed = false;
+
+      for (let rowIndex = 0; rowIndex < GRID_ROWS && !placed; rowIndex += 1) {
+        for (let columnIndex = 0; columnIndex < GRID_COLUMNS; columnIndex += 1) {
+          if (!usedCoordinates.has(`${rowIndex}-${columnIndex}`)) {
+            row = rowIndex;
+            column = columnIndex;
+            placed = true;
+            break;
+          }
         }
       }
+    }
+
+    if (!targetPage) {
+      throw new Error("A page is required before placing a stamp.");
     }
 
     const stamp: Stamp = {
@@ -351,6 +428,23 @@ export function createFoundationStore(initialState: FoundationState = createEmpt
     };
   }
 
+  function deleteStamp(userId: string, stampId: string) {
+    const stampIndex = state.stamps.findIndex((stamp) => stamp.id === stampId && stamp.userId === userId);
+
+    if (stampIndex < 0) {
+      throw new Error("Stamp not found.");
+    }
+
+    state.stamps.splice(stampIndex, 1);
+
+    const slotIndex = state.gridSlots.findIndex((slot) => slot.stampId === stampId);
+    if (slotIndex >= 0) {
+      state.gridSlots.splice(slotIndex, 1);
+    }
+
+    return true;
+  }
+
   function updateBookVisibility(userId: string, isPublic: boolean) {
     const book = getBookByUserId(userId);
     if (!book) {
@@ -366,8 +460,11 @@ export function createFoundationStore(initialState: FoundationState = createEmpt
   }
 
   return {
+    createPageForUser,
     createStamp,
+    deleteStamp,
     getBookViewByUserId,
+    getOrCreateMonthPage,
     getPublicBookByUsername,
     getUserBySession,
     loginUser,
@@ -385,9 +482,10 @@ declare global {
 }
 
 export function getFoundationStore() {
-  if (!globalThis.__STAMPBOOK_FOUNDATION_STORE__) {
+  const existing = globalThis.__STAMPBOOK_FOUNDATION_STORE__;
+  if (!existing || typeof existing.getOrCreateMonthPage !== "function") {
     globalThis.__STAMPBOOK_FOUNDATION_STORE__ = createFoundationStore();
   }
 
-  return globalThis.__STAMPBOOK_FOUNDATION_STORE__;
+  return globalThis.__STAMPBOOK_FOUNDATION_STORE__!;
 }

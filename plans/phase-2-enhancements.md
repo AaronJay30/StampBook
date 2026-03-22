@@ -1,48 +1,47 @@
 # Phase 2 — Enhancements
-**Status:** 🔲 Not Started
+**Status:** 🔄 In Progress
 **Prerequisite:** [Phase 1 — Foundation](phase-1-foundation.md) ✅ Done
-**Goal:** Make the app feel alive — polished modals, animations, page flip, sakura effects, and sounds.
+**Goal:** Turn the app into a tactile book-first experience: login opens directly into a rough paper book, empty squares open a stamping surface, and filled stamps can be released with motion.
 **Back to tracker:** [PLANS.md](../PLANS.md)
 
 ---
 
 ## Features in this Phase
-- Description modal after stamp creation
-- Stamp view modal on click
+- Slot-based stamping flow
+- Click-to-release removal interaction
 - Page flip animation (react-pageflip)
-- Framer-motion micro-animations across the app
-- Falling sakura petals background
+- Tactile motion across stamping and page interactions
+- Rough journal background and paper texture
 - Sound effects (pop, flip, bubble)
-- Paper texture + soft shadow polish
+- Reference-driven visual polish inspired by the attached screenshots and queensjournal.app
 
 ---
 
 ## Task Checklist
 
-### 2.1 Description Modal (after stamp creation)
-- [ ] After a stamp is placed in the grid, open `StampDescriptionModal`
-- [ ] Fields: `description` (textarea, max 280 chars)
-- [ ] Save description to the `stamps` table on submit
-- [ ] framer-motion entrance: `scale_fade_in` (scale from 0.8 + opacity 0 → 1)
-- [ ] framer-motion exit: `scale_fade_out`
-- [ ] "Skip" option — closes without saving a description
-- [ ] Trap focus inside modal (accessibility — [WCAG:2.1.2])
-- [ ] Close on backdrop click or Escape key
+### 2.1 Slot-Based Stamping Surface
+- [x] After login, the user lands on the open book view first
+- [x] Empty squares in the book are clickable and open the stamping surface
+- [x] The stamping UI is an overlay surface, not a separate dashboard panel
+- [x] The selected square index is shown in the stamping UI
+- [x] Clicking a square immediately prompts the user to upload a photo
+- [x] Users upload a photo and keep the image steady while moving the stamp over it to choose the crop/position
+- [x] Replace the placeholder frame/mask treatment with the final uploaded stamp PNG asset from `public/stamp.png`
+- [x] Remove the green screen from the stamp PNG and keep only the stamp body visible in the editor
+- [x] Copy the green-screen window shape onto the exported image so the saved stamp matches the stamp cutout
+- [ ] Add a dedicated description step after pressing the stamp, if the product still needs a separate modal beyond the inline note field
 
-**Acceptance:** Modal appears after every stamp placement; description saves to DB; animations play.
+**Acceptance:** Clicking an empty square opens the stamping surface and saving places the result into that exact square.
 
 ---
 
-### 2.2 Stamp View Modal (click on stamp)
-- [ ] Clicking any stamp in the grid opens `StampViewModal`
-- [ ] Modal displays: stamp image (large), description, creator username + avatar
-- [ ] framer-motion entrance: `zoom_bounce` (spring scale from 0.5 → 1)
-- [ ] framer-motion exit: `fade` (opacity 1 → 0)
-- [ ] Show "Edit" button only if the stamp belongs to the current user
-- [ ] "Edit" reopens description field inline for update
-- [ ] Trap focus; close on backdrop click or Escape key ([WCAG:2.1.2])
+### 2.2 Click-To-Release Removal
+- [x] Clicking a filled stamp in the owner view removes it from the page
+- [x] Removal uses an animated "blown away" motion instead of disappearing instantly
+- [ ] Add particles or paper flecks for a stronger tactile release effect
+- [ ] Decide whether public/read-only view should keep a separate view modal later
 
-**Acceptance:** Clicking a stamp shows the animated modal with correct content.
+**Acceptance:** Clicking a filled stamp in the owner view feels like it lifts off the page and disappears.
 
 ---
 
@@ -57,34 +56,32 @@
 
 ---
 
-### 2.4 Framer-Motion Micro-Animations
-- [ ] **Button bounce:** `whileTap={{ scale: 0.9 }}` + `whileHover={{ scale: 1.05 }}` on all primary buttons
-- [ ] **Stamp drop:** New stamp animates into grid slot (`y: -20 → 0`, `opacity: 0 → 1`)
-- [ ] **Hover zoom:** Stamp thumbnails scale up on hover (`whileHover={{ scale: 1.08 }}`)
-- [ ] **Modal scale:** Shared `AnimatePresence` wrapper around modals for enter/exit
+### 2.4 Framer-Motion Tactile Effects
+- [x] **Stamp hover:** Stamps lift slightly on hover before interaction
+- [x] **Stamp release:** Filled stamps animate off the page on delete
+- [x] **Stamp surface modal:** Overlay enters with scale + fade motion
+- [ ] **Stamp press:** Add a short compress-and-settle animation when a new stamp lands in a square
 - [ ] **Page transition:** Subtle fade between route changes (`next/navigation` + framer)
 
-**Acceptance:** All interactive elements have visible, non-jarring micro-animations.
+**Acceptance:** The book feels tactile and alive rather than static.
 
 ---
 
-### 2.5 Falling Sakura Petals
-- [ ] Create `SakuraPetals` component (Canvas or CSS-animated `<div>` elements)
-- [ ] Generate 15–25 petals at random horizontal positions
-- [ ] Each petal: random size (8–18 px), random fall duration (4–9 s), gentle horizontal drift
-- [ ] Use soft pink colors (`#FFC0CB`, `#FFDEE9`, `#F8AFA6`)
-- [ ] Mount over the page background, `pointer-events: none` ([WCAG:1.4.3] — decorative)
-- [ ] Add `prefers-reduced-motion` check — disable animation if user prefers ([WCAG:2.3.3])
+### 2.5 Ambient Journal Background + Rough Texture
+- [x] Shift the palette toward the warm beige/stone paper colors in the reference screenshots
+- [x] Add rough paper grain and vignette depth to the page background
+- [x] Restyle the book spread to feel like a planner/journal rather than a generic card grid
+- [ ] Add reduced-motion-safe ambient light movement or dust only if it improves the scene
 
-**Acceptance:** Petals fall continuously on all pages; motion preference respected; no interaction blocked.
+**Acceptance:** The background and book feel soft, rough, and paper-like, matching the reference mood.
 
 ---
 
 ### 2.6 Sound Effects (use-sound)
 - [ ] Add sound files to `/public/sounds/`: `pop.mp3`, `flip.mp3`, `bubble.mp3`
-- [ ] Play `pop.mp3` when a stamp is confirmed and placed
+- [ ] Play `pop.mp3` when a stamp is pressed into the selected square
 - [ ] Play `flip.mp3` when a page is flipped
-- [ ] Play `bubble.mp3` when any modal opens
+- [ ] Play `bubble.mp3` when the stamping surface opens
 - [ ] Add a global mute toggle (icon button in Navbar) — persist to `localStorage`
 - [ ] Respect mute state: check before every `play()` call
 - [ ] Do NOT autoplay sounds without user interaction ([OWASP:A5] / browser policy)
@@ -93,14 +90,16 @@
 
 ---
 
-### 2.7 Paper Texture + Soft Shadow Polish
-- [ ] Apply paper texture as a subtle CSS `background-image` (repeating PNG or CSS noise)
-- [ ] Add `box-shadow: 0 4px 24px rgba(248,175,166,0.18)` to cards and modals
-- [ ] Ensure stamp images render with a slight drop shadow
-- [ ] Review all pages for visual consistency with sakura theme
+### 2.7 Queens Journal-Inspired Book Polish
+- [x] Restyle the login-to-book path so the book is the hero immediately after auth
+- [x] Add center spine shadow and planner spread composition inspired by queensjournal.app
+- [x] Use muted beige, stone, and washed-paper tones from the screenshots instead of the earlier pink-first palette
+- [x] Remove extra dashboard chrome so the authenticated screen is just navbar + book
+- [x] Reduce the spread size and center the two-page composition on screen
+- [ ] Fine-tune typography spacing and micro-details against the final reference pass
 - [ ] Check color contrast ratios meet WCAG 2.1 AA (4.5:1 for text) ([WCAG:1.4.3])
 
-**Acceptance:** App has a consistent, polished scrapbook aesthetic.
+**Acceptance:** The product feels closer to a tactile designer journal than a default web app.
 
 ---
 
@@ -109,7 +108,7 @@
 - [ ] Animations are smooth (no jank at 60 fps)
 - [ ] `prefers-reduced-motion` tested and respected
 - [ ] Sound mute state persists across page reloads
-- [ ] All modals are keyboard-accessible (focus trap + Escape close)
+- [ ] All overlays are keyboard-accessible (focus trap + Escape close)
 - [ ] No console errors or warnings in dev mode
 - [ ] Update [PLANS.md](../PLANS.md) Phase 2 row to ✅ Done
 

@@ -38,4 +38,25 @@ describe("foundation sharing rules", () => {
     const bookView = store.getBookViewByUserId(profile.id);
     expect(bookView?.pages[0]?.slots[0]?.stamp?.description).toBe("first memory note");
   });
+
+  it("removes a stamp and frees the square again", () => {
+    const store = createFoundationStore(createEmptyFoundationState());
+    const { profile } = store.registerUser({
+      email: "remove@example.com",
+      password: "remove123",
+      username: "remove_book",
+    });
+
+    const created = store.createStamp({
+      userId: profile.id,
+      imageUrl: sampleImage,
+      shape: "star",
+      description: "Blow away",
+    });
+
+    store.deleteStamp(profile.id, created.stamp.id);
+
+    const bookView = store.getBookViewByUserId(profile.id);
+    expect(bookView?.pages[0]?.slots[0]?.stamp).toBeNull();
+  });
 });

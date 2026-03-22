@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Confirm your StampBook email</title>
+  <!--[if mso]>
+  <noscript>
+    <xml>
+      <o:OfficeDocumentSettings>
+        <o:PixelsPerInch>96</o:PixelsPerInch>
+      </o:OfficeDocumentSettings>
+    </xml>
+  </noscript>
+  <![endif]-->
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap');
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: #e8e1d6;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+      color: #5b5247;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .email-wrapper {
+      width: 100%;
+      background-color: #e4ddd2;
+      background-image:
+        radial-gradient(circle at top left, rgba(255,255,255,0.60) 0%, transparent 30%),
+        radial-gradient(circle at 80% 20%, rgba(255,255,255,0.35) 0%, transparent 25%);
+      padding: 48px 16px;
+    }
+
+    .email-container {
+      max-width: 560px;
+      margin: 0 auto;
+    }
+
+    /* ── Header logo area ── */
+    .email-header {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .email-header .logo-icon {
+      display: inline-block;
+      width: 56px;
+      height: 56px;
+      margin-bottom: 14px;
+    }
+
+    .email-header .brand {
+      font-family: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+      font-size: 32px;
+      font-style: italic;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      color: #3e3530;
+    }
+
+    /* ── Paper card ── */
+    .email-card {
+      background-color: #fdfcf8;
+      border-radius: 3px;
+      box-shadow:
+        0 8px 40px rgba(58, 46, 36, 0.14),
+        0 1px 4px rgba(58, 46, 36, 0.08);
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* ── Paper texture top bar ── */
+    .card-spine {
+      height: 4px;
+      background: linear-gradient(90deg, #c9bfb0 0%, #d7cfc4 40%, #b8ae9f 100%);
+    }
+
+    /* ── Stamp accent strip ── */
+    .stamp-strip {
+      background-color: #f4efe7;
+      border-bottom: 1px solid rgba(171, 162, 147, 0.30);
+      padding: 20px 36px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .stamp-icon-wrap {
+      flex-shrink: 0;
+      width: 52px;
+      height: 52px;
+      border: 2px dashed #c9bfb0;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #fff;
+      /* Perforated edge simulation */
+      background-image:
+        radial-gradient(circle, #f4efe7 4px, transparent 4px);
+      background-size: 10px 10px;
+      background-position: -5px -5px;
+      box-shadow: inset 0 0 0 6px #fdfcf8;
+    }
+
+    .stamp-icon-wrap svg {
+      display: block;
+    }
+
+    .stamp-strip-text {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 13px;
+      font-style: italic;
+      letter-spacing: 0.20em;
+      text-transform: uppercase;
+      color: #aa9f8d;
+    }
+
+    /* ── Card body ── */
+    .card-body {
+      padding: 40px 36px 36px;
+    }
+
+    .card-body h1 {
+      font-family: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+      font-size: 28px;
+      font-weight: 500;
+      font-style: italic;
+      color: #3e3530;
+      margin-bottom: 16px;
+      line-height: 1.25;
+    }
+
+    .card-body p {
+      font-size: 15px;
+      line-height: 1.7;
+      color: #6b5f54;
+      margin-bottom: 14px;
+    }
+
+    .card-body p.note {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-style: italic;
+      font-size: 14px;
+      color: #aa9f8d;
+      margin-top: 6px;
+    }
+
+    /* ── Divider ── */
+    .divider {
+      width: 48px;
+      height: 1px;
+      background: #d4cdc3;
+      margin: 28px 0;
+    }
+
+    /* ── CTA button ── */
+    .cta-wrap {
+      margin: 28px 0 32px;
+    }
+
+    .cta-button {
+      display: inline-block;
+      background-color: #3e3530;
+      color: #f0ebe3 !important;
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 15px;
+      font-style: italic;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-decoration: none;
+      padding: 14px 36px;
+      border-radius: 2px;
+      box-shadow:
+        0 2px 8px rgba(40, 30, 20, 0.22),
+        inset 0 1px 0 rgba(255,255,255,0.06);
+      transition: background 0.2s;
+    }
+
+    /* ── Fallback URL box ── */
+    .fallback-box {
+      background: #f4efe7;
+      border: 1px solid rgba(171,162,147,0.40);
+      border-radius: 2px;
+      padding: 14px 18px;
+      margin-top: 20px;
+    }
+
+    .fallback-box p {
+      font-size: 12px;
+      color: #9c9082;
+      margin-bottom: 6px;
+    }
+
+    .fallback-box a {
+      font-size: 12px;
+      color: #6b5f54;
+      word-break: break-all;
+    }
+
+    /* ── Footer ── */
+    .email-footer {
+      text-align: center;
+      padding: 28px 36px 36px;
+      border-top: 1px solid rgba(171,162,147,0.22);
+    }
+
+    .email-footer p {
+      font-size: 12px;
+      color: #b5a99b;
+      line-height: 1.7;
+      margin-bottom: 4px;
+    }
+
+    .email-footer a {
+      color: #9c9082;
+      text-decoration: underline;
+    }
+
+    /* ── Dog-ear corner ── */
+    .dog-ear {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: 0 28px 28px 0;
+      border-color: transparent #e8e1d6 transparent transparent;
+      filter: drop-shadow(-1px 1px 1px rgba(0,0,0,0.08));
+    }
+
+    /* ── Perforated row decoration ── */
+    .perforation-row {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      padding: 14px 0;
+      border-top: 1px dashed rgba(171,162,147,0.35);
+      border-bottom: 1px dashed rgba(171,162,147,0.35);
+      margin: 0 36px 32px;
+    }
+
+    .perforation-row .dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #d4cdc3;
+    }
+
+    @media only screen and (max-width: 600px) {
+      .email-wrapper { padding: 24px 8px; }
+      .card-body { padding: 28px 24px 24px; }
+      .stamp-strip { padding: 16px 24px; }
+      .card-body h1 { font-size: 24px; }
+      .perforation-row { margin: 0 24px 24px; }
+      .email-footer { padding: 20px 24px 28px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="email-wrapper">
+    <div class="email-container">
+
+      <!-- Logo / brand header -->
+      <div class="email-header">
+        <div class="logo-icon">
+          <!-- Stamp icon SVG -->
+          <svg viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="8" y="8" width="40" height="40" rx="3" fill="#fdfcf8" stroke="#c9bfb0" stroke-width="1.5"/>
+            <!-- Perforated border dots -->
+            <circle cx="8"  cy="8"  r="3" fill="#e4ddd2"/>
+            <circle cx="19" cy="8"  r="3" fill="#e4ddd2"/>
+            <circle cx="28" cy="8"  r="3" fill="#e4ddd2"/>
+            <circle cx="37" cy="8"  r="3" fill="#e4ddd2"/>
+            <circle cx="48" cy="8"  r="3" fill="#e4ddd2"/>
+            <circle cx="8"  cy="48" r="3" fill="#e4ddd2"/>
+            <circle cx="19" cy="48" r="3" fill="#e4ddd2"/>
+            <circle cx="28" cy="48" r="3" fill="#e4ddd2"/>
+            <circle cx="37" cy="48" r="3" fill="#e4ddd2"/>
+            <circle cx="48" cy="48" r="3" fill="#e4ddd2"/>
+            <circle cx="8"  cy="19" r="3" fill="#e4ddd2"/>
+            <circle cx="8"  cy="28" r="3" fill="#e4ddd2"/>
+            <circle cx="8"  cy="37" r="3" fill="#e4ddd2"/>
+            <circle cx="48" cy="19" r="3" fill="#e4ddd2"/>
+            <circle cx="48" cy="28" r="3" fill="#e4ddd2"/>
+            <circle cx="48" cy="37" r="3" fill="#e4ddd2"/>
+            <!-- Inner stamp graphic -->
+            <rect x="14" y="14" width="28" height="28" rx="1" fill="#f4efe7" stroke="#d4cdc3" stroke-width="1"/>
+            <path d="M22 28 Q28 20 34 28 Q28 36 22 28Z" fill="#aa9f8d" opacity="0.7"/>
+            <path d="M28 22 L29.5 26.5 L34 26.5 L30.5 29.5 L31.5 34 L28 31 L24.5 34 L25.5 29.5 L22 26.5 L26.5 26.5 Z" fill="#aa9f8d"/>
+          </svg>
+        </div>
+        <div class="brand">StampBook</div>
+      </div>
+
+      <!-- Main card -->
+      <div class="email-card">
+        <div class="dog-ear"></div>
+        <div class="card-spine"></div>
+
+        <!-- Stamp accent strip -->
+        <div class="stamp-strip">
+          <div class="stamp-icon-wrap">
+            <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="#aa9f8d" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <span class="stamp-strip-text">Email Verification</span>
+        </div>
+
+        <!-- Body -->
+        <div class="card-body">
+          <h1>Confirm your address</h1>
+          <p>
+            Welcome to <strong>StampBook</strong> — a place to collect your days,
+            one stamp at a time.
+          </p>
+          <p>
+            To activate your account and begin filling your book, please confirm
+            your email address by clicking below&hairsp;:
+          </p>
+
+          <div class="cta-wrap">
+            <!-- Replace {{ .ConfirmationURL }} with your Supabase token variable -->
+            <a href="{{ .ConfirmationURL }}" class="cta-button">
+              Confirm my email ›
+            </a>
+          </div>
+
+          <div class="divider"></div>
+
+          <p class="note">
+            This link expires in 24 hours. If you didn&rsquo;t create a StampBook
+            account, you can safely ignore this message.
+          </p>
+
+          <!-- Fallback URL for clients that block buttons -->
+          <div class="fallback-box">
+            <p>If the button doesn&rsquo;t work, copy and paste this link into your browser&hairsp;:</p>
+            <a href="{{ .ConfirmationURL }}">{{ .ConfirmationURL }}</a>
+          </div>
+        </div>
+
+        <!-- Perforated decoration row -->
+        <div class="perforation-row">
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+
+        <!-- Footer inside card -->
+        <div class="email-footer">
+          <p>
+            &copy; 2026 StampBook &mdash; every stamp is a memory pressed into paper.
+          </p>
+          <p>
+            Questions? Reach us at
+            <a href="mailto:hello@stampbook.app">hello@stampbook.app</a>
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</body>
+</html>

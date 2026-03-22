@@ -19,7 +19,7 @@ describe("foundation store", () => {
     const bookView = store.getBookViewByUserId(result.profile.id);
     expect(bookView).not.toBeNull();
     expect(bookView?.pages).toHaveLength(1);
-    expect(bookView?.pages[0]?.slots).toHaveLength(12);
+    expect(bookView?.pages[0]?.slots).toHaveLength(42);
   });
 
   it("authenticates a user and resolves the profile from the created session", () => {
@@ -39,7 +39,7 @@ describe("foundation store", () => {
     expect(store.getUserBySession(result.session.token)?.username).toBe("sakura_book");
   });
 
-  it("places stamps in sequence and creates a new page after the twelfth slot", () => {
+  it("places stamps in sequence across the month page grid", () => {
     const store = createFoundationStore(createEmptyFoundationState());
     const { profile } = store.registerUser({
       email: "grid@example.com",
@@ -57,9 +57,37 @@ describe("foundation store", () => {
     }
 
     const bookView = store.getBookViewByUserId(profile.id);
-    expect(bookView?.pages).toHaveLength(2);
-    expect(bookView?.pages[0]?.slots.filter((slot) => slot.stamp)).toHaveLength(12);
-    expect(bookView?.pages[1]?.slots.filter((slot) => slot.stamp)).toHaveLength(1);
-    expect(bookView?.pages[1]?.slots[0]?.stamp?.description).toBe("Stamp 13");
+    // With capacity 42 (6 rows × 7 cols), all 13 stamps fit on one page
+    expect(bookView?.pages).toHaveLength(1);
+    expect(bookView?.pages[0]?.slots.filter((slot) => slot.stamp)).toHaveLength(13);
+    expect(bookView?.pages[0]?.slots[12]?.stamp?.description).toBe("Stamp 13");
+  });
+
+  it("places a stamp into a selected square instead of the next automatic slot", () => {
+    const store = createFoundationStore(createEmptyFoundationState());
+    const { profile } = store.registerUser({
+      email: "slot@example.com",
+      password: "slotpass9",
+      username: "slot_book",
+    });
+
+    const bookView = store.getBookViewByUserId(profile.id);
+    const selectedSquare = bookView?.pages[0]?.slots[7];
+
+    store.createStamp({
+      userId: profile.id,
+      imageUrl: sampleImage,
+      shape: "stamp_edge",
+      description: "Selected square",
+      target: {
+        pageId: bookView?.pages[0]?.id ?? "",
+        row: selectedSquare?.row ?? 0,
+        column: selectedSquare?.column ?? 0,
+      },
+    });
+
+    const updatedBookView = store.getBookViewByUserId(profile.id);
+    expect(updatedBookView?.pages[0]?.slots[7]?.stamp?.description).toBe("Selected square");
+    expect(updatedBookView?.pages[0]?.slots[0]?.stamp).toBeNull();
   });
 });

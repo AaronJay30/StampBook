@@ -10,7 +10,7 @@
 | Phase | Name | Status | Plan File |
 |-------|------|--------|-----------|
 | 1 | Foundation | 🔄 In Progress | [plans/phase-1-foundation.md](plans/phase-1-foundation.md) |
-| 2 | Enhancements | 🔲 Not Started | [plans/phase-2-enhancements.md](plans/phase-2-enhancements.md) |
+| 2 | Enhancements | 🔄 In Progress | [plans/phase-2-enhancements.md](plans/phase-2-enhancements.md) |
 | 3 | Social | 🔲 Not Started | [plans/phase-3-social.md](plans/phase-3-social.md) |
 
 **Status Legend:** 🔲 Not Started · 🔄 In Progress · ✅ Done · 🚫 Blocked
@@ -42,13 +42,13 @@
 
 | # | Feature | Status |
 |---|---------|--------|
-| 2.1 | Description modal after stamp creation (framer-motion) | 🔲 |
-| 2.2 | Stamp view modal on click (framer-motion) | 🔲 |
+| 2.1 | Slot-based stamping surface + modal flow | 🔄 |
+| 2.2 | Click-to-release stamp removal animation | 🔄 |
 | 2.3 | Page flip animation (react-pageflip) | 🔲 |
-| 2.4 | Framer-motion effects (button bounce, stamp drop, hover zoom) | 🔲 |
-| 2.5 | Falling sakura petals background effect | 🔲 |
+| 2.4 | Framer-motion tactile effects (stamp press, release, hover) | 🔄 |
+| 2.5 | Ambient journal background + rough texture | 🔄 |
 | 2.6 | Sound effects (use-sound: pop, flip, bubble) | 🔲 |
-| 2.7 | Paper texture + soft shadow polish | 🔲 |
+| 2.7 | Queens Journal-inspired book polish | 🔄 |
 
 ---
 

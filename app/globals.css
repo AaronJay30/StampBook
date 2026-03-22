@@ -1,13 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap');
 @import "tailwindcss";
 
 :root {
-  --background: #fff5f7;
-  --foreground: #5f4258;
-  --primary: #ffc0cb;
-  --secondary: #ffdee9;
-  --accent: #f8afa6;
-  --paper: rgba(255, 255, 255, 0.78);
-  --paper-border: rgba(248, 175, 166, 0.28);
+  --background: #e8e1d6;
+  --foreground: #5b5247;
+  --primary: #d7d1c2;
+  --secondary: #ede6d9;
+  --accent: #aa9f8d;
+  --paper: rgba(246, 241, 232, 0.82);
+  --paper-border: rgba(171, 162, 147, 0.34);
 }
 
 @theme inline {
@@ -18,7 +19,8 @@
   --color-accent: var(--accent);
   --color-paper: var(--paper);
   --font-sans: var(--font-m-plus-rounded);
-  --shadow-soft: 0 16px 40px rgba(248, 175, 166, 0.2);
+  --font-serif: "Cormorant Garamond", Georgia, serif;
+  --shadow-soft: 0 20px 48px rgba(92, 80, 65, 0.12);
   --radius-card: 1.75rem;
 }
 
@@ -36,9 +38,11 @@ body {
   background: var(--background);
   color: var(--foreground);
   background-image:
-    radial-gradient(circle at top left, rgba(255, 255, 255, 0.92), transparent 28%),
-    radial-gradient(circle at right 15% bottom 10%, rgba(248, 175, 166, 0.24), transparent 22%),
-    linear-gradient(180deg, #fff8fa 0%, #fff1f4 100%);
+    radial-gradient(circle at top left, rgba(255, 255, 255, 0.74), transparent 24%),
+    radial-gradient(circle at 82% 22%, rgba(255, 255, 255, 0.4), transparent 18%),
+    linear-gradient(180deg, #ece6dc 0%, #e4ddd2 100%);
+  background-attachment: fixed;
+
   font-family: var(--font-m-plus-rounded), sans-serif;
 }
 
@@ -47,11 +51,22 @@ body::before {
   position: fixed;
   inset: 0;
   pointer-events: none;
-  opacity: 0.28;
+  opacity: 0.2;
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.35) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.3) 1px, transparent 1px);
-  background-size: 22px 22px;
+    radial-gradient(rgba(98, 88, 75, 0.08) 0.7px, transparent 0.7px),
+    radial-gradient(rgba(255, 255, 255, 0.28) 0.7px, transparent 0.7px),
+    linear-gradient(rgba(255, 255, 255, 0.16) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.12) 1px, transparent 1px);
+  background-position: 0 0, 12px 12px, 0 0, 0 0;
+  background-size: 16px 16px, 18px 18px, 40px 40px, 40px 40px;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at center, transparent 48%, rgba(70, 61, 51, 0.08) 100%);
 }
 
 a {
@@ -67,5 +82,67 @@ select {
 }
 
 ::selection {
-  background: rgba(255, 192, 203, 0.45);
+  background: rgba(150, 134, 111, 0.28);
+}
+
+/* ── Libris book classes ──────────────────────────────────── */
+.book-shadow {
+  box-shadow:
+    0 32px 72px -10px rgba(0, 0, 0, 0.58),
+    0 8px 20px -4px rgba(0, 0, 0, 0.32),
+    -10px 6px 22px -6px rgba(0, 0, 0, 0.52),
+    inset 0 0 100px rgba(0, 0, 0, 0.06);
+}
+
+.page-texture {
+  background-image:
+    radial-gradient(rgba(86, 74, 58, 0.04) 1px, transparent 1px),
+    radial-gradient(rgba(255, 255, 255, 0.22) 1px, transparent 1px);
+  background-size: 22px 22px, 18px 18px;
+  background-position: 0 0, 9px 9px;
+}
+
+.page-depth-right {
+  box-shadow:
+    inset 40px 0 40px -30px rgba(0, 0, 0, 0.18),
+    inset 0 0 100px rgba(0, 0, 0, 0.02);
+}
+
+.page-depth-left {
+  box-shadow:
+    inset -40px 0 40px -30px rgba(0, 0, 0, 0.18),
+    inset 0 0 100px rgba(0, 0, 0, 0.02);
+}
+
+.wood-cover {
+  background-color: #3d2b1f;
+  background-image:
+    repeating-linear-gradient(
+      92deg,
+      transparent,
+      transparent 3px,
+      rgba(255, 255, 255, 0.015) 3px,
+      rgba(255, 255, 255, 0.015) 4px
+    ),
+    repeating-linear-gradient(
+      180deg,
+      transparent,
+      transparent 18px,
+      rgba(0, 0, 0, 0.04) 18px,
+      rgba(0, 0, 0, 0.04) 19px
+    );
+  box-shadow:
+    0 20px 50px rgba(0, 0, 0, 0.5),
+    inset 0 0 100px rgba(0, 0, 0, 0.28);
+}
+
+.spine-gradient {
+  background: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0.12) 0%,
+    rgba(0, 0, 0, 0.06) 10%,
+    rgba(255, 255, 255, 0.08) 50%,
+    rgba(0, 0, 0, 0.06) 90%,
+    rgba(0, 0, 0, 0.12) 100%
+  );
 }

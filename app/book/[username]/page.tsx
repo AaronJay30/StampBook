@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 
 import { BookViewer } from "@/components/BookViewer";
-import { getFoundationStore } from "@/lib/foundation-store";
+import { getPublicBookByUsername } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
 
@@ -13,7 +13,7 @@ interface BookPageProps {
 
 export default async function PublicBookPage({ params }: BookPageProps) {
   const { username } = await params;
-  const bookView = getFoundationStore().getPublicBookByUsername(username);
+  const bookView = await getPublicBookByUsername(username);
 
   if (!bookView) {
     notFound();

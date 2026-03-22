@@ -18,7 +18,7 @@ export default async function Home() {
             Build a scrapbook of stamp-shaped memories you can keep and share.
           </h1>
           <p className="mt-4 max-w-2xl text-lg leading-8 text-foreground/80">
-            Phase 1 now includes registration, login, a protected dashboard, stamp creation, auto-placement into a 4x3 book grid, and public sharing through profile book links.
+            The experience now opens like a rough paper journal: you sign in, click a square, upload a photo, and move the stamp over a steady image before it presses into the page.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Link className="rounded-full bg-primary px-5 py-3 text-sm font-bold text-foreground shadow-[var(--shadow-soft)] transition hover:brightness-[1.03]" href={profile ? "/dashboard" : "/register"}>
@@ -34,7 +34,7 @@ export default async function Home() {
           <h2 className="text-2xl font-extrabold">Setup Snapshot</h2>
           <ul className="mt-5 space-y-3 text-sm leading-7 text-foreground/80">
             <li>Authentication and session cookies are working in local foundation mode</li>
-            <li>Stamp creation uses a Konva editor with masking, drag, zoom, and rotate</li>
+            <li>Stamp creation uses the real public stamp PNG with the green screen removed and the stamp window shape copied to export</li>
             <li>Books auto-create pages when all 12 slots are filled</li>
             <li>Public share pages are available at /book/username</li>
           </ul>

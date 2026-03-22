@@ -3,27 +3,12 @@
 import Link from "next/link";
 import { startTransition, useState } from "react";
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
+import { ArrowRight, BookOpen, Lock, Mail, User } from "lucide-react";
 
 interface AuthFormProps {
   mode: "login" | "register";
 }
-
-const copy = {
-  login: {
-    title: "Welcome back to your stamp book",
-    submit: "Log In",
-    helper: "Need an account?",
-    href: "/register",
-    hrefLabel: "Create one",
-  },
-  register: {
-    title: "Create your first scrapbook profile",
-    submit: "Register",
-    helper: "Already registered?",
-    href: "/login",
-    hrefLabel: "Log in",
-  },
-};
 
 export function AuthForm({ mode }: AuthFormProps) {
   const router = useRouter();
@@ -43,16 +28,12 @@ export function AuthForm({ mode }: AuthFormProps) {
     try {
       const response = await fetch(`/api/auth/${mode}`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
 
       const data = (await response.json()) as { error?: string };
-      if (!response.ok) {
-        throw new Error(data.error ?? "Something went wrong.");
-      }
+      if (!response.ok) throw new Error(data.error ?? "Something went wrong.");
 
       startTransition(() => {
         router.push("/dashboard");
@@ -66,67 +47,131 @@ export function AuthForm({ mode }: AuthFormProps) {
   }
 
   return (
-    <section className="mx-auto w-full max-w-md rounded-[var(--radius-card)] border border-[var(--paper-border)] bg-white/90 p-8 shadow-[var(--shadow-soft)] backdrop-blur">
-      <p className="text-sm font-bold tracking-[0.2em] text-accent uppercase">StampBook Social</p>
-      <h1 className="mt-3 text-3xl font-extrabold">{copy[mode].title}</h1>
-      <form
-        className="mt-6 space-y-4"
-        action={(formData) => {
-          void handleSubmit(formData);
-        }}
+    <div className="flex min-h-screen items-center justify-center p-4 sm:p-8">
+      {/* Background blobs */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute top-[-10%] left-[-10%] h-[40%] w-[40%] rounded-full bg-stone-400 opacity-20 blur-[120px]" />
+        <div className="absolute bottom-[-10%] right-[-10%] h-[40%] w-[40%] rounded-full bg-stone-300 opacity-20 blur-[120px]" />
+      </div>
+
+      <motion.div
+        animate={{ opacity: 1, y: 0 }}
+        className="relative w-full max-w-4xl overflow-hidden rounded-lg bg-[#FDFCF8]"
+        initial={{ opacity: 0, y: 24 }}
+        style={{ boxShadow: "0 4px 48px rgba(90,75,60,0.13), 0 1px 4px rgba(90,75,60,0.07)" }}
+        transition={{ duration: 0.7, ease: "easeOut" }}
       >
-        {mode === "register" ? (
-          <label className="flex flex-col gap-2 text-sm font-semibold text-foreground">
-            Username
-            <input
-              className="rounded-2xl border border-[var(--paper-border)] bg-white px-4 py-3 outline-none ring-0 transition focus:border-accent"
-              name="username"
-              placeholder="sakura_collector"
-              required
-              minLength={3}
-              maxLength={20}
-              pattern="[a-z0-9_]+"
-            />
-          </label>
-        ) : null}
+        <div className="relative flex h-full min-h-[520px] w-full overflow-hidden">
+          {/* Left page — brand */}
+          <div className="page-depth-left page-texture hidden flex-1 items-center justify-center overflow-hidden border-r border-stone-200/50 bg-[#F9F7F2] p-10 sm:flex">
+            <div className="pointer-events-none absolute inset-y-0 right-0 w-12 opacity-30 spine-gradient" />
+            <div className="relative z-10 space-y-6 text-center">
+              <div className="inline-block rounded-full border border-stone-200/50 bg-stone-100/50 p-4">
+                <BookOpen className="h-10 w-10 text-stone-600" />
+              </div>
+              <div className="space-y-3">
+                <h1 className="font-serif text-5xl italic tracking-tight text-stone-800">
+                  StampBook
+                </h1>
+                <div className="mx-auto h-px w-12 bg-stone-300" />
+                <p className="mx-auto max-w-xs font-serif text-lg leading-relaxed text-stone-500">
+                  &ldquo;Every stamp is a memory pressed into paper.&rdquo;
+                </p>
+              </div>
+            </div>
+            <div className="absolute top-6 left-6 h-14 w-14 rounded-tl-md border-t border-l border-stone-200" />
+            <div className="absolute right-6 bottom-6 h-14 w-14 rounded-br-md border-r border-b border-stone-200" />
+          </div>
 
-        <label className="flex flex-col gap-2 text-sm font-semibold text-foreground">
-          Email
-          <input
-            className="rounded-2xl border border-[var(--paper-border)] bg-white px-4 py-3 outline-none ring-0 transition focus:border-accent"
-            name="email"
-            type="email"
-            placeholder="you@example.com"
-            required
-          />
-        </label>
+          {/* Right page — form */}
+          <div className="page-depth-right page-texture flex flex-1 flex-col justify-center border-l border-stone-200/50 bg-[#FDFCF8] p-6 sm:p-10">
+            <div className="pointer-events-none absolute inset-y-0 left-0 hidden h-12 w-12 opacity-20 sm:block spine-gradient" />
+            <div className="relative z-10 mx-auto w-full max-w-sm space-y-5">
+              <div>
+                <h2 className="font-serif text-3xl text-stone-800">
+                  {mode === "login" ? "Welcome Back" : "Create Account"}
+                </h2>
+                <p className="mt-1 text-xs font-light text-stone-500">
+                  {mode === "login"
+                    ? "Sign in to your stamp collection."
+                    : "Start your stamp journey today."}
+                </p>
+              </div>
 
-        <label className="flex flex-col gap-2 text-sm font-semibold text-foreground">
-          Password
-          <input
-            className="rounded-2xl border border-[var(--paper-border)] bg-white px-4 py-3 outline-none ring-0 transition focus:border-accent"
-            name="password"
-            type="password"
-            placeholder="At least 8 chars, letters and numbers"
-            required
-            minLength={8}
-          />
-        </label>
+              <form
+                className="space-y-4"
+                action={(formData) => {
+                  void handleSubmit(formData);
+                }}
+              >
+                {mode === "register" ? (
+                  <div className="group relative">
+                    <User className="absolute top-1/2 left-0 h-4 w-4 -translate-y-1/2 text-stone-400 transition-colors group-focus-within:text-stone-700" />
+                    <input
+                      className="w-full border-b border-stone-200 bg-transparent py-2 pl-8 pr-4 text-sm font-light text-stone-700 outline-none transition-all placeholder:text-stone-300 focus:border-stone-800"
+                      maxLength={20}
+                      minLength={3}
+                      name="username"
+                      pattern="[a-z0-9_]+"
+                      placeholder="Username (e.g. sakura_collector)"
+                      required
+                      type="text"
+                    />
+                  </div>
+                ) : null}
 
-        {error ? <p className="rounded-2xl bg-rose-50 px-4 py-3 text-sm text-rose-700">{error}</p> : null}
+                <div className="group relative">
+                  <Mail className="absolute top-1/2 left-0 h-4 w-4 -translate-y-1/2 text-stone-400 transition-colors group-focus-within:text-stone-700" />
+                  <input
+                    className="w-full border-b border-stone-200 bg-transparent py-2 pl-8 pr-4 text-sm font-light text-stone-700 outline-none transition-all placeholder:text-stone-300 focus:border-stone-800"
+                    name="email"
+                    placeholder="Email Address"
+                    required
+                    type="email"
+                  />
+                </div>
 
-        <button
-          className="w-full rounded-full bg-primary px-5 py-3 font-bold text-foreground transition hover:brightness-[1.03] disabled:cursor-not-allowed disabled:opacity-70"
-          type="submit"
-          disabled={isPending}
-        >
-          {isPending ? "Saving..." : copy[mode].submit}
-        </button>
-      </form>
+                <div className="group relative">
+                  <Lock className="absolute top-1/2 left-0 h-4 w-4 -translate-y-1/2 text-stone-400 transition-colors group-focus-within:text-stone-700" />
+                  <input
+                    className="w-full border-b border-stone-200 bg-transparent py-2 pl-8 pr-4 text-sm font-light text-stone-700 outline-none transition-all placeholder:text-stone-300 focus:border-stone-800"
+                    minLength={8}
+                    name="password"
+                    placeholder="Password (min 8 characters)"
+                    required
+                    type="password"
+                  />
+                </div>
 
-      <p className="mt-5 text-sm text-foreground/70">
-        {copy[mode].helper} <Link className="font-bold text-accent" href={copy[mode].href}>{copy[mode].hrefLabel}</Link>
-      </p>
-    </section>
+                {error ? (
+                  <p className="rounded bg-rose-50 px-3 py-2 text-xs text-rose-600">{error}</p>
+                ) : null}
+
+                <motion.button
+                  className="flex w-full items-center justify-center gap-2 rounded-sm bg-stone-800 py-3 font-serif text-base tracking-wide text-stone-50 shadow-lg shadow-stone-200 transition-colors hover:bg-stone-900 disabled:opacity-60"
+                  disabled={isPending}
+                  type="submit"
+                  whileHover={{ scale: 1.01 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  {isPending ? "Saving…" : mode === "login" ? "Sign In" : "Create Account"}
+                  <ArrowRight className="h-4 w-4" />
+                </motion.button>
+              </form>
+
+              <p className="text-center text-xs text-stone-400">
+                {mode === "login" ? "No account yet?" : "Already registered?"}{" "}
+                <Link
+                  className="font-medium text-stone-800 underline-offset-4 hover:underline"
+                  href={mode === "login" ? "/register" : "/login"}
+                >
+                  {mode === "login" ? "Sign up free" : "Log in here"}
+                </Link>
+              </p>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+    </div>
   );
 }

@@ -1,5 +1,5 @@
-export const GRID_ROWS = 4;
-export const GRID_COLUMNS = 3;
+export const GRID_ROWS = 6;
+export const GRID_COLUMNS = 7;
 export const GRID_CAPACITY = GRID_ROWS * GRID_COLUMNS;
 export const MAX_DESCRIPTION_LENGTH = 280;
 
@@ -30,6 +30,8 @@ export interface Page {
   id: string;
   bookId: string;
   pageNumber: number;
+  year?: number;
+  month?: number;
 }
 
 export interface Stamp {
@@ -66,6 +68,8 @@ export interface BookGridSlot {
 export interface BookPageView {
   id: string;
   pageNumber: number;
+  year?: number;
+  month?: number;
   slots: BookGridSlot[];
 }
 
@@ -91,6 +95,11 @@ export interface CreateStampInput {
   imageUrl: string;
   shape: StampShape;
   description: string;
+  target?: {
+    pageId: string;
+    row: number;
+    column: number;
+  };
 }
 
 export interface FoundationState {

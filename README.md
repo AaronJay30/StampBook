@@ -2,6 +2,14 @@
 
 Cute scrapbook-style social platform where users collect memories as stamps inside a shareable book.
 
+---
+
+## v1.0.0 (2026-03-22)
+
+- Initial public release! See [CHANGELOG.md](./CHANGELOG.md) for details.
+
+---
+
 ## Phase 1 Status
 
 Implemented in the app:
