@@ -106,9 +106,9 @@ export function BookViewer({ bookView, readOnly = false }: { bookView: BookView;
 
     // Try to lock orientation to landscape on mobile/tablet
     async function lockLandscape() {
-      if (window.screen && window.screen.orientation && window.screen.orientation.lock) {
+      if (window.screen?.orientation?.lock) {
         try {
-          await window.screen.orientation.lock("landscape");
+          await (window.screen.orientation as any).lock("landscape");
           setOrientationLocked(true);
         } catch {
           setOrientationLocked(false);
